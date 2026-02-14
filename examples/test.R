@@ -1,0 +1,1 @@
+filtered_data <- filter(my_data, age > 30)

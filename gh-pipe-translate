@@ -1,0 +1,3 @@
+#!/usr/bin/env bash
+# This forwards all arguments to our Python script
+C:/Python313/python.exe "$(dirname "$0")/main.py" "$@"
