@@ -39,3 +39,31 @@ The handoff is painful. Manually translating an analyst's 50-line `dplyr` script
 # Install directly from GitHub
 gh extension install dev-jash15/gh-pipe-translate
 ```
+## 🚀 Usage
+The basic syntax requires a source file and a `--target` language flag.
+
+```bash
+gh pipe-translate <source_file> --target <target_language>
+```
+**Example 1: Terminal Preview**
+
+Translate an R script to PostgreSQL and preview it in the terminal with full syntax highlighting:
+
+```bash
+gh pipe-translate examples/complex_analysis.R --target postgres-sql
+```
+
+**Example 2: Save to Production**
+
+Translate the same logic into a Python script using Pandas, and save it directly to your project directory:
+```bash
+gh pipe-translate examples/complex_analysis.R --target python-pandas --out prod_pipeline.py
+```
+
+## 🧠 How it Works
+
+This tool was built for the GitHub Copilot CLI Challenge. It treats Copilot not just as a chatbot, but as an embedded reasoning engine.
+
+Under the hood, `gh-pipe-translate` uses a Python wrapper to read the local data file, construct a rigid, context-aware prompt, and programmatically invoke `gh copilot suggest`. It then parses the AI's response, strips out unnecessary markdown, and uses the `Rich` library to format the output natively in the developer's standard workflow.
+
+By eliminating the context-switch of copying code into a browser-based LLM, this extension acts as a true sidekick for Data Engineers.
