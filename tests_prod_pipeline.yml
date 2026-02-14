@@ -1,0 +1,111 @@
+version: '1.0'
+tests:
+  - name: customer_id_not_null
+    table: customer_metrics
+    column: customer_id
+    test_type: not_null
+
+  - name: month_not_null
+    table: customer_metrics
+    column: month
+    test_type: not_null
+
+  - name: total_spent_not_null
+    table: customer_metrics
+    column: total_spent
+    test_type: not_null
+
+  - name: purchases_not_null
+    table: customer_metrics
+    column: purchases
+    test_type: not_null
+
+  - name: previous_month_spend_not_null
+    table: customer_metrics
+    column: previous_month_spend
+    test_type: not_null
+
+  - name: is_churn_risk_not_null
+    table: customer_metrics
+    column: is_churn_risk
+    test_type: not_null
+
+  - name: customer_lifetime_value_not_null
+    table: customer_metrics
+    column: customer_lifetime_value
+    test_type: not_null
+
+  - name: month_format_valid
+    table: customer_metrics
+    column: month
+    test_type: pattern
+    pattern: '^\d{4}-\d{2}$'
+
+  - name: total_spent_non_negative
+    table: customer_metrics
+    column: total_spent
+    test_type: range
+    min_value: 0
+
+  - name: purchases_positive
+    table: customer_metrics
+    column: purchases
+    test_type: range
+    min_value: 1
+
+  - name: previous_month_spend_non_negative
+    table: customer_metrics
+    column: previous_month_spend
+    test_type: range
+    min_value: 0
+
+  - name: customer_lifetime_value_non_negative
+    table: customer_metrics
+    column: customer_lifetime_value
+    test_type: range
+    min_value: 0
+
+  - name: is_churn_risk_boolean
+    table: customer_metrics
+    column: is_churn_risk
+    test_type: accepted_values
+    values: [true, false]
+
+  - name: churn_risk_logic_valid
+    table: customer_metrics
+    test_type: custom_sql
+    sql: >
+      SELECT COUNT(*) FROM customer_metrics
+      WHERE is_churn_risk = TRUE
+        AND (previous_month_spend <= 0 OR total_spent > 0)
+
+  - name: customer_lifetime_value_cumulative
+    table: customer_metrics
+    test_type: custom_sql
+    sql: >
+      SELECT COUNT(*) FROM customer_metrics m1
+      WHERE m1.customer_lifetime_value < 
+            (SELECT customer_lifetime_value FROM customer_metrics m2
+             WHERE m2.customer_id = m1.customer_id 
+             AND m2.month < m1.month
+             ORDER BY m2.month DESC LIMIT 1)
+
+  - name: unique_customer_month_combination
+    table: customer_metrics
+    columns: [customer_id, month]
+    test_type: unique
+
+  - name: customer_id_exists
+    table: customer_metrics
+    column: customer_id
+    test_type: custom_sql
+    sql: >
+      SELECT COUNT(*) FROM customer_metrics
+      WHERE customer_id IS NULL OR customer_id < 1
+
+  - name: total_spent_matches_purchases
+    table: customer_metrics
+    test_type: custom_sql
+    sql: >
+      SELECT COUNT(*) FROM customer_metrics
+      WHERE total_spent > 0 AND purchases = 0
