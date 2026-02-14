@@ -1,47 +1,41 @@
-# gh-pipe-translate: The Polyglot Pipeline Constraint
+# 🔄 gh-pipe-translate
 
-## 1. Executive Summary
+**Semantic data pipeline translation directly in your terminal, powered by GitHub Copilot CLI.**
 
-Modern data teams are inherently polyglot, often performing analysis and prototyping in languages like **R (Tidyverse)** or **Python (Pandas)**, while production environments require scalable, declarative languages like **SQL** or **PySpark**. This project addresses the friction caused by manually translating exploratory logic into production-grade pipelines, which often creates bottlenecks, human error, and "code silos".
-
----
-
-## 2. Core Pain Points
-
-- **Syntax Translation Bottleneck:** A complex data aggregation that takes five minutes in R's `dplyr` can take an engineer hours to rewrite into nested SQL with window functions and CTEs.
-- **Loss of Semantic Context:** Traditional translation tools often fail because data workflows require **semantic translation**—understanding the intent (like pivoting or joining) to write idiomatic equivalent code.
-- **Broken Workflows:** Developers often have to leave their terminal to use web-based LLMs for translation, which destroys deep work through constant context-switching.
+![Demo of gh-pipe-translate](demo.gif) _(Note: Add your screen recording/GIF here!)_
 
 ---
 
-## 3. Target Audience
+## 🛑 The Problem: The Polyglot Pipeline Constraint
 
-This tool is designed for:
+Modern data teams are inherently polyglot. Data exploration frequently occurs in statistical libraries (like R's `dplyr` or Python's `pandas`), while production data warehousing demands declarative, scalable languages (like PostgreSQL, Snowflake, or PySpark).
 
-- **Cross-Functional Data Teams:** Analysts handing off prototypes to Data Engineers.
-- **Open-Source & Volunteer Projects:** Distributed teams requiring a unified way to translate diverse contributor scripts into standard SQL repositories.
-- **Career Transitioners:** Professionals moving from Data Analyst roles into Data Engineering who need a bridge to learn production-grade architecture.
+The handoff is painful. Manually translating an analyst's 50-line `dplyr` script—complete with grouped mutations, rolling averages, and lag functions—into a nested SQL query with Common Table Expressions (CTEs) and Window Functions takes a Data Engineer hours. Standard line-by-line translation tools fail because data transformation requires _semantic_ understanding of the logic.
+
+## 💡 The Solution
+
+`gh-pipe-translate` bridges the gap between Data Analysts and Data Engineers. Built as a GitHub CLI extension, it leverages the reasoning engine of **GitHub Copilot CLI** to semantically translate exploratory data scripts into highly optimized, production-ready code without ever leaving the terminal.
+
+### ✨ Features
+
+- **Semantic Translation:** Understands complex data operations (e.g., converting an R `cumsum()` into an SQL `SUM() OVER(ROWS BETWEEN UNBOUNDED PRECEDING...)`).
+- **Multi-Target Support:** Translate to `postgres-sql`, `python-pandas`, `pyspark`, and more.
+- **Beautiful Terminal UI:** Built with `Rich` for syntax highlighting, loading spinners, and clean error handling.
+- **File I/O Ready:** Instantly write production-ready code to your local directory using the `--out` flag.
 
 ---
 
-## 4. Why Existing Solutions Fail
+## ⚙️ Installation
 
-- **Lack of Local Context:** Web-based AI tools do not know the specific database dialects or local `schema.yml` files used in a project.
-- **Manual Effort:** Current workflows rely on slow manual rewrites or inefficient copy-pasting.
-- **Limited Tooling:** Standard terminal commands like `sed` or `awk` are purely text-based and cannot interpret programmatic logic.
+**Prerequisites:**
 
----
+1. [GitHub CLI (`gh`)](https://cli.github.com/) installed and authenticated (`gh auth login`).
+2. GitHub Copilot enabled on your account.
+3. Python 3.10+ installed on your system.
 
-## 5. The Solution: gh-pipe-translate
-
-Created for the GitHub Copilot CLI Challenge, `gh-pipe-translate` brings semantic code translation directly into the developer's terminal.
-
-### How it Works
-
-The CLI leverages Copilot's reasoning engine to read local files, understand data transformations, and output optimized, idiomatic SQL.
-
-### Example Usage
+**Install the Extension:**
 
 ```bash
-gh-pipe-translate exploratory_analysis.R --target postgres-sql > prod_pipeline.sql
+# Install directly from GitHub
+gh extension install dev-jash15/gh-pipe-translate
 ```
